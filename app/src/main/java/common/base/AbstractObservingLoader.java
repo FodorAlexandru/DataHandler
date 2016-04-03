@@ -2,19 +2,26 @@ package common.base;
 
 import android.content.Context;
 import android.database.ContentObserver;
+import android.util.Log;
 
 /**
  * Created by shade_000 on 3/26/2016.
  */
 public abstract class AbstractObservingLoader<T> extends AbstractLoader<T> {
+    //region Fields
+    private final String TAG = getClass().getSimpleName();
     protected final DisableableContentObserver mObserver;
     private boolean mIsRegistered;
+    //endregion
 
+    //region Constructor
     public AbstractObservingLoader(Context context) {
         super(context);
         mObserver = new DisableableContentObserver(new ForceLoadContentObserver());
     }
+    //endregion
 
+    //region Overrides
     @Override
     protected void onStartLoading() {
         mObserver.setEnabled(true);
@@ -23,16 +30,12 @@ public abstract class AbstractObservingLoader<T> extends AbstractLoader<T> {
 
     @Override
     protected void onAbandon() {
-        mObserver.setEnabled(false);
-        unregisterObserver(mObserver);
-        mIsRegistered = false;
+        prepareForUnregister();
     }
 
     @Override
     protected void onReset() {
-        mObserver.setEnabled(false);
-        unregisterObserver(mObserver);
-        mIsRegistered = false;
+        prepareForUnregister();
         super.onReset();
     }
 
@@ -43,8 +46,24 @@ public abstract class AbstractObservingLoader<T> extends AbstractLoader<T> {
             registerObserver(mObserver);
         }
     }
+    //endregion
 
+    //region Methods
+
+    private void prepareForUnregister(){
+        if(mIsRegistered){
+            mIsRegistered = false;
+            mObserver.setEnabled(false);
+            unregisterObserver(mObserver);
+            Log.i(TAG,"Prepare for unregister observer");
+        }
+    }
+
+    //endregion
+
+    //region Abstract Methods
     protected abstract void registerObserver(ContentObserver observer);
     protected abstract void unregisterObserver(ContentObserver observer);
+    //endregion
 }
 

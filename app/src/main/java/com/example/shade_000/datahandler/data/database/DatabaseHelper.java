@@ -20,12 +20,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //region Overrides
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        sqLiteDatabase.execSQL(DatabaseContract.User.CREATE_TABLE);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        if(oldVersion != newVersion){
+            sqLiteDatabase.execSQL(DatabaseContract.User.DROP_TABLE);
+            onCreate(sqLiteDatabase);
+        }
     }
     //endregion
 }
