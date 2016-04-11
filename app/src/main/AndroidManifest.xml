@@ -13,9 +13,9 @@
           android:authorities="com.example.shade_000.datahandler.access.provider"
           android:multiprocess="true"
           android:exported="false"
-          android:name=".access.provider.DataHandlerProvider"/>
+          android:name=".data.DataHandlerProvider"/>
         <activity
-            android:name=".views.MainActivity"
+            android:name=".users.UserActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
