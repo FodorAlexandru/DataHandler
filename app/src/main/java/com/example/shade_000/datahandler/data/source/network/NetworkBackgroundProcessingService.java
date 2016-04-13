@@ -6,7 +6,14 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.shade_000.datahandler.data.models.volley.GsonRequest;
+
 import java.util.concurrent.ExecutorService;
+
+import common.constants.EnumConstants;
+import util.NetworkUtils;
+
+import static common.constants.EnumConstants.*;
 
 /**
  * Created by shade_000 on 12/04/2016.
@@ -21,7 +28,7 @@ public class NetworkBackgroundProcessingService extends Service implements TaskF
     //region Constructors
 
     public NetworkBackgroundProcessingService(){
-        Log.d(TAG, "public TestService() ==> creating new Pool");
+        Log.d(TAG, "NetworkBackgroundProcessingService ==> creating new Pool");
         executorService = NetworkThreadPoolExecutor.getDefault(this);
     }
 
@@ -64,17 +71,25 @@ public class NetworkBackgroundProcessingService extends Service implements TaskF
 
     private void startProcessingRequest(Intent intent){
         Log.d(TAG, "startProcessorForRequest(Intent intent) started");
-        //processor
-        /*Action actionKey = Action.valueOf(intent.getExtras().getString(KEY_ACTION));
-        Runnable processorToRun = getProcessor(intent, actionKey, executorService);
+        NetworkOperations operationKey = NetworkOperations.getType(intent.getExtras().getInt(NetworkUtils.OPERATION_KEY));
+        Runnable processorToRun = getProcessor(operationKey, executorService);
         if (processorToRun != null) {
             executorService.execute(processorToRun);
-        }*/
+        }
         Log.d(TAG, "startProcessorForRequest(Intent intent) finished");
     }
 
-    private Runnable getProcessor(){
-        return null;
+    private Runnable getProcessor(NetworkOperations operationKey, ExecutorService executorService){
+        switch (operationKey){
+            case Get_Users:
+                return new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                };
+            default:
+                throw new RuntimeException("Processor not implemented");
+        }
     }
 
     //endregion
