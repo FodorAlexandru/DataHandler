@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.shade_000.datahandler">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +11,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <service android:name=".data.source.network.NetworkBackgroundProcessingService"
+            android:exported="false"
+            />
        <provider
           android:authorities="com.example.shade_000.datahandler.access.provider"
           android:multiprocess="true"
@@ -25,5 +30,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

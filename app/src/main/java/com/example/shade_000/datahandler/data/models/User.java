@@ -1,5 +1,7 @@
 package com.example.shade_000.datahandler.data.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import common.base.BaseModel;
 
 /**
@@ -7,9 +9,13 @@ import common.base.BaseModel;
  */
 public class User extends BaseModel{
     //region Fields
+    @SerializedName("Name")
     private String name;
+    @SerializedName("Alias")
     private String alias;
+    @SerializedName("Email")
     private String email;
+    @SerializedName("Phone")
     private String phone;
     //endregion Fields
 

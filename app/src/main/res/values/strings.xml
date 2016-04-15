@@ -2,4 +2,7 @@
     <string name="app_name">Data Handler</string>
     <string name="action_settings">Settings</string>
     <string name="add_test_data">Add Test Data</string>
+    <string name="ok_button">Ok</string>
+    <string name="default_error_message">Try again later</string>
+    <string name="default_error_tittle">Oops! Something went wrong</string>
 </resources>

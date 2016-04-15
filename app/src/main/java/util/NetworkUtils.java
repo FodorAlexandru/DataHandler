@@ -4,6 +4,7 @@ package util;
 import android.support.v4.util.Pair;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import common.constants.EnumConstants;
 
@@ -15,13 +16,21 @@ import static common.constants.EnumConstants.*;
 public class NetworkUtils {
     //region Keys
     public static final String OPERATION_KEY = "OPERATION_KEY";
-    public static final String HOST="http://192.168.0.108/";//office:192.168.0.102
-    public static final String URL_BASE ="http://notifymeserver.azurewebsites.net/api/";
+    public static final String USER_NETWORK_ERROR = "USER_NETWORK_ERROR";
+    //endregion
+
+    //region Request Constants
+    public static final int TIMEOUT = 30;
+    public static final TimeUnit TIMEUNIT = TimeUnit.SECONDS;
+    //endregion
+
+    //region Server Constants
+    public static final String HOST="http://192.168.0.100/";//office:192.168.0.102
+    public static final String URL_BASE ="NotifyMeAzure/api/";
     //endregion
 
     //region Controller Identifiers
-    public static final String USERS_CONTROLLER_IDENTIFIER = "TestController";
-
+    public static final String USERS_CONTROLLER_IDENTIFIER = "User";
     //endregion
 
     //region Base Methods

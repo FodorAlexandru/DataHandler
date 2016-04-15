@@ -1,6 +1,7 @@
 package common.base;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
  */
 public class BaseModel implements Serializable {
     //region Fields
+    @SerializedName("Id")
     private int _id;
     //endregion Fields
 
