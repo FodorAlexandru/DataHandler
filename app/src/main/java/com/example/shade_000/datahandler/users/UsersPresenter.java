@@ -1,17 +1,36 @@
 package com.example.shade_000.datahandler.users;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.example.shade_000.datahandler.data.models.User;
+import com.example.shade_000.datahandler.data.models.eventBuss.UserErrorMessage;
+import com.example.shade_000.datahandler.data.models.volley.GsonRequest;
 import com.example.shade_000.datahandler.data.source.UserLoaderProvider;
 import com.example.shade_000.datahandler.data.source.UserObservingLoader;
+import com.example.shade_000.datahandler.data.source.local.DatabaseContract;
 import com.example.shade_000.datahandler.data.source.network.NetworkBackgroundProcessingService;
+import com.example.shade_000.datahandler.data.source.network.VolleyHandler;
+import com.google.gson.reflect.TypeToken;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import common.constants.EnumConstants;
 import util.NetworkUtils;
@@ -48,7 +67,7 @@ public class UsersPresenter implements UsersContract.Presenter,LoaderManager.Loa
     }
 
     @Override
-    public void loadUsers(Context context) {
+    public void loadUsers(final Context context) {
         mUserView.setLoadingIndicator(true);
         Intent intent = new Intent(context, NetworkBackgroundProcessingService.class);
         intent.putExtra(NetworkUtils.OPERATION_KEY, EnumConstants.NetworkOperations.Get_Users.getId());

@@ -113,7 +113,7 @@ public class NetworkBackgroundProcessingService extends Service implements TaskF
                                 type,
                                 null,
                                 null,
-                                Request.Method.POST,
+                                Request.Method.GET,
                                 requestFuture,
                                 requestFuture
                         );

@@ -1,16 +1,35 @@
 package com.example.shade_000.datahandler.users;
 
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.RemoteException;
+import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.example.shade_000.datahandler.R;
+import com.example.shade_000.datahandler.data.models.User;
+import com.example.shade_000.datahandler.data.models.volley.GsonRequest;
+import com.example.shade_000.datahandler.data.source.local.DatabaseContract;
+import com.example.shade_000.datahandler.data.source.network.VolleyHandler;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import common.base.BaseFragment;
+import common.constants.EnumConstants;
+import util.NetworkUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -108,7 +127,7 @@ public class UsersFragment extends BaseFragment implements UsersContract.View{
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mUsersPresenter.loadUsers(getActivity());
+               mUsersPresenter.loadUsers(getActivity());
             }
         });
 
