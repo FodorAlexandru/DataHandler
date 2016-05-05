@@ -10,18 +10,5 @@ import android.support.v7.widget.Toolbar;
 public abstract class BaseActivity extends AppCompatActivity {
     //region Overrides
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(getResourceLayoutId());
-        Toolbar toolbar = (Toolbar) findViewById(getTabLayoutId());
-        setSupportActionBar(toolbar);
-
-    }
-    //endregion
-    //region Abstract Methods
-    public abstract int getResourceLayoutId();
-
-    public abstract int getTabLayoutId();
     //endregion
 }

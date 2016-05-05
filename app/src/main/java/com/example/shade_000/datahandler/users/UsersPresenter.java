@@ -21,7 +21,6 @@ import com.example.shade_000.datahandler.data.models.User;
 import com.example.shade_000.datahandler.data.models.eventBuss.UserErrorMessage;
 import com.example.shade_000.datahandler.data.models.volley.GsonRequest;
 import com.example.shade_000.datahandler.data.source.UserLoaderProvider;
-import com.example.shade_000.datahandler.data.source.UserObservingLoader;
 import com.example.shade_000.datahandler.data.source.local.DatabaseContract;
 import com.example.shade_000.datahandler.data.source.network.NetworkBackgroundProcessingService;
 import com.example.shade_000.datahandler.data.source.network.VolleyHandler;
@@ -41,7 +40,7 @@ import util.NetworkUtils;
 public class UsersPresenter implements UsersContract.Presenter,LoaderManager.LoaderCallbacks<Cursor>{
 
     //region Fields
-    private final static int USERS_QUERY = 1;
+    private final int USERS_QUERY = 1;
     private final UsersContract.View mUserView;
     private final LoaderManager mLoaderManager;
     private final UserLoaderProvider mUserLoaderProvider;
@@ -80,6 +79,11 @@ public class UsersPresenter implements UsersContract.Presenter,LoaderManager.Loa
         mUserView.showLoadingUsersError();
     }
 
+    @Override
+    public void openUserDetails(int userId) {
+        mUserView.showUserDetailUi(userId);
+    }
+
     //endregion
 
     //region Loader Overrides
@@ -92,13 +96,22 @@ public class UsersPresenter implements UsersContract.Presenter,LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mUserView.setLoadingIndicator(false);
-        mUserView.showUsers(data);
+        showData(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mUserView.clearUsers();
+    }
+
+    //endregion
+
+    //region Methods
+
+    private void showData(Cursor data){
+        mUserView.setLoadingIndicator(false);
+        mUserView.showUsers(data);
+        mUserView.showNavigationUpIcon();
     }
 
     //endregion

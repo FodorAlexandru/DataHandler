@@ -5,4 +5,5 @@
     <string name="ok_button">Ok</string>
     <string name="default_error_message">Try again later</string>
     <string name="default_error_tittle">Oops! Something went wrong</string>
+    <string name="fragment_user_detail_tag">fragment_user_detail_tag</string>
 </resources>

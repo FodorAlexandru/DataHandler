@@ -36,6 +36,9 @@ public final class DatabaseContract {
     //region User Contract
     public static final class User implements BaseColumns {
 
+        public static final int USERS_QUERY_ID = 1;
+        public static final int USER_ITEM_QUERY_ID = 2;
+
         /**
          * Private Constructor in order to prevent instantiation
          */

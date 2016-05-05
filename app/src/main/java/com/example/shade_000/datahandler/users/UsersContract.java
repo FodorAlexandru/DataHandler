@@ -18,10 +18,13 @@ public interface UsersContract {
         void clearUsers();
         void setLoadingIndicator(boolean active);
         void showLoadingUsersError();
+        void showUserDetailUi(int userId);
+        void showNavigationUpIcon();
     }
 
     interface Presenter extends BasePresenter{
         void loadUsers(Context context);
         void processError(VolleyError volleyError);
+        void openUserDetails(int userId);
     }
 }

@@ -2,39 +2,30 @@ package com.example.shade_000.datahandler.users;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.shade_000.datahandler.R;
 
 import java.util.ArrayList;
 
 import common.base.BaseActivity;
-import common.constants.EnumConstants;
 import util.ActivityUtils;
-import util.NetworkUtils;
 
-import com.example.shade_000.datahandler.data.models.eventBuss.UserErrorMessage;
-import com.example.shade_000.datahandler.data.source.UserLoaderProvider;
 import com.example.shade_000.datahandler.data.source.local.DatabaseContract;
-import com.example.shade_000.datahandler.data.source.network.NetworkBackgroundProcessingService;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class UserActivity extends BaseActivity {
 
     //region Fields
+    private ActionBar actionBar;
     private String[][] data = {{"Gray Watson", "Gray.Watson@gmail.com"}, {"Ravi Verma", "Ravi.Verma@gmail.com"}, {"Ashok Singhal", "Ashok.Singhal@gmail.com"},{"Amit Yadav", "Amit.Yadav@gmail.com"}, {"Jake Wharton", "Jake.Wharton@gmail.com"}};
-    private UsersContract.Presenter userPresenter;
     //endregion
 
     //region Overrides
@@ -49,29 +40,49 @@ public class UserActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        UsersFragment tasksFragment =
+        setContentView(R.layout.activity_users);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
+
+        if(savedInstanceState != null)
+            return;
+
+        UsersFragment userFragment =
                 (UsersFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (tasksFragment == null) {
+        if (userFragment == null) {
             // Create the fragment
-            tasksFragment = UsersFragment.newInstance();
+            userFragment = UsersFragment.newInstance();
             ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), tasksFragment, R.id.contentFrame,null);
+                    getSupportFragmentManager(), userFragment, R.id.contentFrame,false,null);
         }
 
-        userPresenter = new UsersPresenter(getSupportLoaderManager(),new UserLoaderProvider(getApplicationContext()),tasksFragment);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            //additional code
+        } else {
+            getFragmentManager().popBackStack();
+        }
+
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -89,15 +100,7 @@ public class UserActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public int getResourceLayoutId() {
-        return R.layout.activity_users;
-    }
 
-    @Override
-    public int getTabLayoutId() {
-        return R.id.toolbar;
-    }
     //endregion
 
     //region Methods
@@ -123,18 +126,5 @@ public class UserActivity extends BaseActivity {
 
     //endregion
 
-    //region Event Buss Methods
 
-    @Subscribe(sticky = true,threadMode = ThreadMode.MAIN)
-    public void onEvent(UserErrorMessage userErrorMessage){
-        switch (userErrorMessage.getMessage()){
-            case NetworkUtils.USER_NETWORK_ERROR:
-                userPresenter.processError(userErrorMessage.getError());
-                break;
-        }
-
-        EventBus.getDefault().removeStickyEvent(userErrorMessage);
-    }
-
-    //endregion
 }

@@ -57,3 +57,5 @@ app/app.iml
 app/app.iml
 .idea/libraries/design_23_1_1.xml
 .idea/libraries/design_23_1_1.xml
+*.bin
+*.lock

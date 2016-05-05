@@ -15,14 +15,15 @@ import com.example.shade_000.datahandler.data.source.local.DatabaseContract;
 public class UserObservingLoader extends AbstractObservingLoader<Cursor> {
     //region Fields
     private final String TAG = getClass().getSimpleName();
-    private final Uri[] mObservedUris;
+    private final Uri mObservedUri;
     //endregion
 
     //region Constructor
-    public UserObservingLoader(Context context) {
+    public UserObservingLoader(Context context,Uri uri) {
         super(context);
-        mObservedUris = new Uri[] {DatabaseContract.User.CONTENT_USER_URI};
+        mObservedUri = uri;
     }
+
     //endregion
 
     //region Overrides
@@ -30,7 +31,7 @@ public class UserObservingLoader extends AbstractObservingLoader<Cursor> {
     @Override
     public Cursor loadInBackground() {
         ContentResolver contentResolver = getContext().getContentResolver();
-        Cursor cursor = contentResolver.query(DatabaseContract.User.CONTENT_USER_URI, DatabaseContract.User.USER_COLUMNS, null, null, DatabaseContract.User.DEFAULT_SORT_ORDER);
+        Cursor cursor = contentResolver.query(mObservedUri, DatabaseContract.User.USER_COLUMNS, null, null, DatabaseContract.User.DEFAULT_SORT_ORDER);
         if (cursor != null) {
             // Ensure the cursor window is filled
             cursor.getCount();
@@ -46,9 +47,7 @@ public class UserObservingLoader extends AbstractObservingLoader<Cursor> {
 
     @Override
     protected void registerObserver(ContentObserver observer) {
-        for (Uri uri : mObservedUris) {
-            getContext().getContentResolver().registerContentObserver(uri, true, observer);
-        }
+        getContext().getContentResolver().registerContentObserver(mObservedUri, true, observer);
         Log.i(TAG, "Content Observer Registered");
     }
 
@@ -64,6 +63,12 @@ public class UserObservingLoader extends AbstractObservingLoader<Cursor> {
             result.close();
         }
     }
+
+    //endregion
+
+    //region Methods
+
+
 
     //endregion
 }
