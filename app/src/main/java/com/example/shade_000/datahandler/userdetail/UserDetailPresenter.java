@@ -13,7 +13,7 @@ import com.example.shade_000.datahandler.data.source.UserLoaderProvider;
  */
 public class UserDetailPresenter implements LoaderManager.LoaderCallbacks<Cursor>,UserDetailContract.Presenter {
     //region Fields
-    private final int USER_DETAIL_QUERY = 1;
+    private final int USER_DETAIL_QUERY = 2;
     private final int userId;
     private final UserDetailContract.View userDetailView;
     private final LoaderManager loaderManager;

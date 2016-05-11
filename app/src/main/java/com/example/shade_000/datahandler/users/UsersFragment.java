@@ -1,11 +1,8 @@
 package com.example.shade_000.datahandler.users;
 
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
-import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.RemoteException;
+import android.os.Parcelable;
 import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,34 +11,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.example.shade_000.datahandler.R;
-import com.example.shade_000.datahandler.data.models.User;
 import com.example.shade_000.datahandler.data.models.eventBuss.UserErrorMessage;
-import com.example.shade_000.datahandler.data.models.volley.GsonRequest;
 import com.example.shade_000.datahandler.data.source.UserLoaderProvider;
-import com.example.shade_000.datahandler.data.source.local.DatabaseContract;
-import com.example.shade_000.datahandler.data.source.network.VolleyHandler;
 import com.example.shade_000.datahandler.userdetail.UserDetailFragment;
-import com.example.shade_000.datahandler.userdetail.UserDetailPresenter;
-import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
 import common.base.BaseFragment;
-import common.constants.EnumConstants;
 import util.ActivityUtils;
 import util.NetworkUtils;
 
@@ -51,7 +34,10 @@ import util.NetworkUtils;
 public class UsersFragment extends BaseFragment implements UsersContract.View{
 
     //region Fields
+    private final static String ARG_LIST_STATE = "LIST_STATE";
     private UserAdapter mUserAdapter;
+    private ListView listView;
+    private Parcelable mListState = null;
     private UsersContract.Presenter mUsersPresenter;
     private SwipeRefreshLayout swipeRefreshContainer;
     //endregion
@@ -73,9 +59,18 @@ public class UsersFragment extends BaseFragment implements UsersContract.View{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        if(savedInstanceState!=null){
+            restoreControlsState(savedInstanceState);
+        }
         new UsersPresenter(getActivity().getSupportLoaderManager(),new UserLoaderProvider(getActivity().getApplicationContext()),this);
+    }
+
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(ARG_LIST_STATE,listView.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -155,7 +150,7 @@ public class UsersFragment extends BaseFragment implements UsersContract.View{
     //region Methods
 
     private void initControls(View view){
-        final ListView listView = (ListView) view.findViewById(R.id.fragment_main_list_view);
+        listView = (ListView) view.findViewById(R.id.fragment_main_list_view);
         mUserAdapter = new UserAdapter(getContext(),null,false);
         listView.setAdapter(mUserAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -165,6 +160,8 @@ public class UsersFragment extends BaseFragment implements UsersContract.View{
                 mUsersPresenter.openUserDetails(cursor.getInt(cursor.getColumnIndex(BaseColumns._ID)));
             }
         });
+        if(mListState!=null)
+            listView.onRestoreInstanceState(mListState);
 
         swipeRefreshContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         swipeRefreshContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -185,7 +182,12 @@ public class UsersFragment extends BaseFragment implements UsersContract.View{
                mUsersPresenter.loadUsers(getActivity());
             }
         });
+    }
 
+    private void restoreControlsState(Bundle savedInstanceState){
+        if(savedInstanceState!=null){
+            mListState = savedInstanceState.getParcelable(ARG_LIST_STATE);
+        }
     }
 
     public static UsersFragment newInstance() {
